@@ -12,4 +12,6 @@ Add the two lines to the /conf/config.xml in the <system> section so the ports a
     ...
   </system>
 ```
-To get the LED's to be the corresponding color as the gateway status monitor add the gatewaystatuslights to the /etc/phpshellsessions/ folder and add "* * * * * pfSsh.php playback gatewaystatuslight" via crontab -e to update the lights every minute. Note: You might have to change WAN_DHCP to match your WAN port name.
+To get the LED's to be the corresponding color as the gateway status monitor add the gatewaystatuslights to the /etc/phpshellsessions/ folder and add this line via crontab -e to update the lights every minute.
+`* * * * * pfSsh.php playback gatewaystatuslight`
+Note: You might have to change WAN_DHCP in gatewaystatuslight to match your WAN port name.
