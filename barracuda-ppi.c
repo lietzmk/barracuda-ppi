@@ -1,3 +1,12 @@
+/**
+ * @file      barracuda-ppi.c
+ * @authors   Matthew Lietz
+ *
+ * @brief Control the network ports and LEDs on the chassis of Barracuda Web
+ * Filter with parallel port interface chassis managment, with PFSense installed
+ * or other software.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -18,6 +27,7 @@ static uint8_t GREEN_LED = 128;
 
 static int ppi_fd;
 
+// Initialize the Parallel port
 static void do_init(void)
 {
   char port[] = "/dev/ppi0";
@@ -29,6 +39,7 @@ static void do_init(void)
   }
 }
 
+// Write the bits to the Parallel Port
 static void do_out(unsigned long outval)
 {
   uint8_t val = outval, n;
@@ -42,6 +53,7 @@ static void do_out(unsigned long outval)
   }
 }
 
+// Read the bits from the parallel port
 static unsigned long do_in(void)
 {
   uint8_t val, n;
@@ -54,13 +66,14 @@ static unsigned long do_in(void)
   return val;
 }
 
+// Change the desired bit in the int that hold the ppi status
 void set_pin( uint8_t *val, char pinValue, uint8_t *Pin ) {
   if( !(*val & *Pin) ) {
-    if( pinValue == 48 ) {
+    if( pinValue == 48 ) { // 0 char
       *val = *val + *Pin;
     }
   } else if( *val & *Pin ) {
-    if( pinValue == 49 ) {
+    if( pinValue == 49 ) { // 1 char
       *val = *val - *Pin;
     }
   }
@@ -68,11 +81,12 @@ void set_pin( uint8_t *val, char pinValue, uint8_t *Pin ) {
 
 int main( int argc, char *argv[] )
 {
-  bool printStatus = false;
-  do_init();
+  do_init(); // ppi0
   uint8_t val = do_in();
   uint8_t startval = val;
+  bool printStatus = false;
 
+  // Loop through parameters
   for(int i = 1; i < argc; ++i) {
     if( strcmp(argv[i], "--green") == 0 ||
         strcmp(argv[i], "-g") == 0 ) {
@@ -110,7 +124,7 @@ int main( int argc, char *argv[] )
         "-s, --status  print LED/port status\n" );
     }
   }
-
+  // Write to ppi0 only if val has changed
   if( startval != val ) {
     do_out( val );
   }
