@@ -1,0 +1,28 @@
+/*
+ * /etc/phpshellsessions/gatewaystatuslight
+ *
+ * Changes the light on the front pannel based on
+ * the gateway status
+ *
+ * Note: you may have to change WAN_DHCP to the name of your WAN Port
+ */
+require_once("gwlb.inc");
+$status = return_gateways_status(true);
+switch( $status['WAN_DHCP']['status'] ) {
+  case "none":
+    // Green
+    exec( 'barracuda-ppi -a 0 -g 1' );
+    break;
+  case "loss":
+  case "delay":
+    // Yellow
+    exec( 'barracuda-ppi -a 0 -y 1' );
+    break;
+  case "down":
+    // Red
+    exec( 'barracuda-ppi -a 0 -r 1' );
+    break;
+  default:
+    // Unknown
+    exec( 'barracuda-ppi -a 1' );
+}
