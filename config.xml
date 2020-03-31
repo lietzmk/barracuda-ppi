@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<pfsense>
+	<system>
+		<earlyshellcmd>barracuda-ppi -a 0 -p 0 -y 1</earlyshellcmd>
+		<shellcmd>barracuda-ppi -y 0 -g 1</shellcmd>
+  </system>
+</pfsense>
