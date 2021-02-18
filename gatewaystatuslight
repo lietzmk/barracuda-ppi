@@ -10,6 +10,7 @@ require_once("gwlb.inc");
 $status = return_gateways_status(true);
 switch( $status['WAN_DHCP']['status'] ) {
   case "none":
+  case "online":
     // Green
     exec( 'barracuda-ppi -a 0 -g 1' );
     break;
